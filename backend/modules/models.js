@@ -108,9 +108,6 @@ const Admin = sequelize.define(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [6,30],
-      },
     },
     phone: {
       type: DataTypes.STRING,
