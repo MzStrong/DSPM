@@ -1,5 +1,8 @@
 const express = require("express");
+require("dotenv").config()
 const { sequelize } = require("./modules/models");
+const authRoute = require("./routes/authRoute");
+const cors = require("cors");
 const {
   createGenders,
   createRelationship,
@@ -14,6 +17,8 @@ const {
 } = require("./controllers/userController");
 const {
   createAdmin,
+  loginAdmin,
+  authen,
   getAdmins,
   getAdminById,
   updateAdmin,
@@ -56,17 +61,31 @@ const {
 } = require("./controllers/assetmentController");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 app.use(express.json());
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:5173"],
+  })
+);
 
 // API
+app.use("/api", authRoute);
+
 app.post("/api/createuser", createUser);
 app.get("/api/getusers", getUsers);
 app.get("/api/getuser/:id", getUserById);
 app.put("/api/updateuser/:id", updateUser);
 app.delete("/api/deleteuser/:id", deleteUser);
 
+// Admin
+// Register
 app.post("/api/createadmin", createAdmin);
+// Login
+app.post("/api/login/admin", loginAdmin);
+// Authentication
+app.get("/api/authen", authen);
 app.get("/api/getadmins", getAdmins);
 app.get("/api/getadmin/:id", getAdminById);
 app.put("/api/updateadmin/:id", updateAdmin);
